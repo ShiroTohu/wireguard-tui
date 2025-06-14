@@ -2,6 +2,7 @@ import os
 
 from textual.app import App, ComposeResult, Widget
 from textual.widgets import ListView, Label
+from textual.containers import Horizontal, Grid
 from textual import events
 
 from rich import box
@@ -15,7 +16,7 @@ class WireGuard():
             path = "/etc/wireguard/"
             return os.listdir(path)
         except PermissionError:
-            return "None"
+            return "Cannot read /etc/wireguard. Permission denied. Please run as root to access this folder."
 
 
 class FocusPanel(Widget):
@@ -36,20 +37,20 @@ class TunnelsSelect(FocusPanel):
 
 class Logs(FocusPanel):
     def render(self) -> Panel:
-        return Panel("Stuff", title="Tunnels", border_style="white",
+        return Panel("Stuff", title="Logs", border_style="white",
                      box=box.SQUARE)
 
 
 class TunnelInformation(FocusPanel):
     def render(self) -> Panel:
         return Panel("Information about current configuration",
-                     title="Tunnels", border_style="white", box=box.SQUARE)
+                     title="Information", border_style="white", box=box.SQUARE)
 
 
 class NetworkInformation(FocusPanel):
     def render(self) -> Panel:
         return Panel("Information about current configuration",
-                     title="Tunnels", border_style="white", box=box.SQUARE)
+                     title="Network Traffic", border_style="white", box=box.SQUARE)
 
 
 class WireGuardApp(App):
@@ -59,10 +60,12 @@ class WireGuardApp(App):
     ]
 
     def compose(self) -> ComposeResult:
-        yield TunnelsSelect()
-        yield Logs()
-        yield NetworkInformation()
-        yield TunnelInformation()
+        yield Grid(
+            TunnelsSelect(),
+            Logs(),
+            NetworkInformation(),
+            TunnelInformation(),
+        )
 
     def on_mount(self) -> None:
         self.title = "Wireguard TUI"
