@@ -10,6 +10,9 @@ from rich.panel import Panel
 
 
 class WireGuard():
+    """
+    Class for communicating with the wiregaurd daemon
+    """
     @staticmethod
     def get_configs():
         try:
@@ -17,6 +20,14 @@ class WireGuard():
             return os.listdir(path)
         except PermissionError:
             return "Cannot read /etc/wireguard. Permission denied. Please run as root to access this folder."
+
+    @staticmethod
+    def activate(config: str) -> bool:
+        pass
+
+    @staticmethod
+    def deactivate(config: str) -> bool:
+        pass
 
 
 class FocusPanel(Widget):
