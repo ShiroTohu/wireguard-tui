@@ -2,19 +2,24 @@ import os
 
 from textual.app import App, ComposeResult, Widget
 from textual.widgets import ListView, Label
-from textual.containers import Horizontal, Grid
+from textual.containers import Grid
 from textual import events
+from textual.screen import ModalScreen 
 
 from rich import box
 from rich.panel import Panel
 
 
-class WireGuard():
-    """
-    Class for communicating with the wiregaurd daemon
-    """
+class WireGuardDaemon():
+    """Class for communicating with the wiregaurd daemon"""
+
+    def __init__(self):
+        """Initializes the connection"""
+        pass
+
     @staticmethod
     def get_configs():
+        """Return a list of available wireguard configurations"""
         try:
             path = "/etc/wireguard/"
             return os.listdir(path)
@@ -23,17 +28,22 @@ class WireGuard():
 
     @staticmethod
     def activate(config: str) -> bool:
+        """Activate a wireguard configuration"""
         pass
 
     @staticmethod
     def deactivate(config: str) -> bool:
+        """Deactivate a wireguard configuration"""
         pass
 
 
 class FocusPanel(Widget):
+    def on_mount(self) -> None:
+        self.panel = Panel("Stuff", title="Tunnels", border_style="red",
+                           box=box.SQUARE)
+
     def render(self) -> Panel:
-        return Panel("Stuff", title="Tunnels", border_style="red",
-                     box=box.SQUARE)
+        return self.panel
 
     def on_focus(self) -> None:
         return None
@@ -41,9 +51,7 @@ class FocusPanel(Widget):
 
 class TunnelsSelect(FocusPanel):
     def render(self) -> Panel:
-        # TODO: keep in mind that the panel cannot render lists, only strings
-        return Panel(WireGuard.get_configs(), title="Tunnels",
-                     border_style="red", box=box.SQUARE)
+        return self.panel
 
 
 class Logs(FocusPanel):
@@ -62,6 +70,11 @@ class NetworkInformation(FocusPanel):
     def render(self) -> Panel:
         return Panel("Information about current configuration",
                      title="Network Traffic", border_style="white", box=box.SQUARE)
+
+
+class ErrorModal(ModalScreen):
+    def render(self) -> Panel:
+        return Panel("An error occured")
 
 
 class WireGuardApp(App):
