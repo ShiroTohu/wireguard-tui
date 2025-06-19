@@ -1,3 +1,4 @@
 # wireguard-tui
 
-relies on NetworkManager
+> [!WARNING]
+> This project is a WIP
