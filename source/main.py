@@ -80,7 +80,7 @@ class ErrorModal(ModalScreen):
 class WireGuardApp(App):
     BINDINGS = [
         ("q", "quit", "quit"),
-        ("tab", "next_panel", "Next Panel")
+        ("tab", "next_panel", "Next Panel"),
         ("shift+tab", "last_panel", "Last Panel")
     ]
 
