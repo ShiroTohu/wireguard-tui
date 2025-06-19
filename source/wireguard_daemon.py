@@ -4,6 +4,7 @@ import os
 
 # Socket path for the AF_UINX address family
 SOCKET_PATH = "/run/wg-manager.sock"
+MAXIMUM_CONNECTIONS = 1
 
 # Remove the socket path before socket bind
 if os.path.exists(SOCKET_PATH):
@@ -12,7 +13,7 @@ if os.path.exists(SOCKET_PATH):
 server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 server.bind(SOCKET_PATH)
 os.chmod(SOCKET_PATH, 0o660)
-server.listen()
+server.listen(MAXIMUM_CONNECTIONS)
 
 while True:
     conn, _ = server.accept()

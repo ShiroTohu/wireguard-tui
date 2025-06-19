@@ -1,40 +1,10 @@
-import os
-
 from textual.app import App, ComposeResult, Widget
 from textual.widgets import ListView, Label
 from textual.containers import Grid
-from textual import events
-from textual.screen import ModalScreen 
+from textual.screen import ModalScreen
 
 from rich import box
 from rich.panel import Panel
-
-
-class WireGuardDaemon():
-    """Class for communicating with the wiregaurd daemon"""
-
-    def __init__(self):
-        """Initializes the connection"""
-        pass
-
-    @staticmethod
-    def get_configs():
-        """Return a list of available wireguard configurations"""
-        try:
-            path = "/etc/wireguard/"
-            return os.listdir(path)
-        except PermissionError:
-            return "Cannot read /etc/wireguard. Permission denied. Please run as root to access this folder."
-
-    @staticmethod
-    def activate(config: str) -> bool:
-        """Activate a wireguard configuration"""
-        pass
-
-    @staticmethod
-    def deactivate(config: str) -> bool:
-        """Deactivate a wireguard configuration"""
-        pass
 
 
 class FocusPanel(Widget):
