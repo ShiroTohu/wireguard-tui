@@ -80,7 +80,8 @@ class ErrorModal(ModalScreen):
 class WireGuardApp(App):
     BINDINGS = [
         ("q", "quit", "quit"),
-        ("tab", "next_panel", "Next Panel (Tab)")
+        ("tab", "next_panel", "Next Panel")
+        ("shift+tab", "last_panel", "Last Panel")
     ]
 
     def compose(self) -> ComposeResult:
@@ -100,12 +101,14 @@ class WireGuardApp(App):
         selected = event.item.query_one(Label).text
         self.console.print(f"Selected: {selected}")
 
-    def on_key(self, event: events.Key):
-        if event.key == "tab":
-            self.focus_index += 1
-
     def action_next_panel(self):
+        # the focus index cannot go above the number of panels
         self.focus_index += 1
+
+    def action_last_panel(self):
+        # the focus index cannot go below zero
+        if (self.focus_index > 0):
+            self.focus_index -= 1
 
 
 if __name__ == "__main__":
