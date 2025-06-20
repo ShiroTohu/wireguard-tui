@@ -10,20 +10,30 @@ MAXIMUM_CONNECTIONS = 1
 if os.path.exists(SOCKET_PATH):
     os.remove(SOCKET_PATH)
 
-server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-server.bind(SOCKET_PATH)
-os.chmod(SOCKET_PATH, 0o660)
-server.listen(MAXIMUM_CONNECTIONS)
+with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
+    server.bind(SOCKET_PATH)
+    os.chmod(SOCKET_PATH, 0o666)
+    server.listen(MAXIMUM_CONNECTIONS)
 
-while True:
     conn, _ = server.accept()
     with conn:
-        data = conn.recv(1024).decode().strip()
-        if data.startswith("connect "):
-            profile = data.split()[1]
-            subprocess.run(["wg-quick", "up", profile])
-        elif data.startswith("disconnect "):
-            profile = data.split()[1]
-            subprocess.run(["wg-quick", "down", profile])
-        elif data.startswith("list"):
-            subprocess.run(["ls", "etc/wireguard/"])
+        while True:
+            data = conn.recv(1024).decode().strip()
+            if not data:
+                break
+
+            print(data)
+
+            if data.startswith("up "):
+                profile = data.split()[1]
+                subprocess.run(["wg-quick", "up", profile])
+                conn.send("true")
+            elif data.startswith("down "):
+                profile = data.split()[1]
+                subprocess.run(["wg-quick", "down", profile])
+                conn.send("true")
+            elif data == "list":
+                configs = subprocess.run(["ls", "etc/wireguard/"],
+                                         capture_output=True)
+                configs = configs.stdout.split("\n")[::-1]
+                conn.send(configs)

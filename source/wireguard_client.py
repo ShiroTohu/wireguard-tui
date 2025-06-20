@@ -17,12 +17,20 @@ class WireGuardClient():
         cls.client_socket.connect(cls.SOCKET_PATH)
         cls.client_socket.send('list')
 
-    @staticmethod
-    def activate(config: str) -> bool:
+    @classmethod
+    def activate(cls, config: bytes) -> bool:
         """Activate a wireguard configuration"""
-        pass
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.connect(cls.SOCKET_PATH)
+            s.sendall(b'activate ' + config)
+            data = s.recv(1024)
+            print(data)
 
-    @staticmethod
-    def deactivate(config: str) -> bool:
+    @classmethod
+    def deactivate(cls, config: bytes) -> bool:
         """Deactivate a wireguard configuration"""
-        pass
+        cls.client_socket.send(b"deactivate " + config)
+
+
+if __name__ == "__main__":
+    WireGuardClient.activate(b"Blahaj")
