@@ -13,7 +13,7 @@ if os.path.exists(SOCKET_PATH):
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
     server.bind(SOCKET_PATH)
     os.chmod(SOCKET_PATH, 0o666)
-    server.listen(MAXIMUM_CONNECTIONS)
+    server.listen()
 
     conn, _ = server.accept()
     with conn:

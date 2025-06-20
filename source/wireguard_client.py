@@ -6,7 +6,6 @@ class WireGuardClient():
     Class for communicating with the wiregaurd daemon. Acts as a client for
     the WireguardDaemon
     """
-    client_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     SOCKET_PATH = "/run/wg-manager.sock"
 
     @classmethod
@@ -18,19 +17,22 @@ class WireGuardClient():
         cls.client_socket.send('list')
 
     @classmethod
-    def activate(cls, config: bytes) -> bool:
+    def activate(cls, config: str) -> bool:
         """Activate a wireguard configuration"""
-        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
-            s.connect(cls.SOCKET_PATH)
-            s.sendall(b'activate ' + config)
-            data = s.recv(1024)
-            print(data)
+        cls.send_message(f"up {config}")
 
     @classmethod
-    def deactivate(cls, config: bytes) -> bool:
+    def deactivate(cls, config: str) -> bool:
         """Deactivate a wireguard configuration"""
-        cls.client_socket.send(b"deactivate " + config)
+        cls.send_message(f"down {config}")
+
+    @classmethod
+    def send_message(cls, message: str) -> str:
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+            s.connect(cls.SOCKET_PATH)
+            s.sendall(message.encode())
+            return True
 
 
 if __name__ == "__main__":
-    WireGuardClient.activate(b"Blahaj")
+    WireGuardClient.activate("Blahaj")
