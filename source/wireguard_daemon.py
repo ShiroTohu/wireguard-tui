@@ -25,13 +25,12 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
             if data.startswith("up "):
                 profile = data.split()[1]
                 command = subprocess.run(["wg-quick", "up", profile])
-                conn.sendall(command.returncode)
+                conn.sendall(bytes(command.returncode))
             elif data.startswith("down "):
                 profile = data.split()[1]
                 subprocess.run(["wg-quick", "down", profile])
-                conn.sendall(command.returncode)
+                conn.sendall(bytes(command.returncode))
             elif data == "list":
-                configs = subprocess.run(["ls", "etc/wireguard/"],
-                                         capture_output=True)
-                configs = configs.stdout.split("\n")[::-1]
-                conn.sendall(configs.encode())
+                configs = subprocess.run(["ls", "/etc/wireguard/"],
+                                         capture_output=True, text=True)
+                conn.sendall(configs.stdout.encode())

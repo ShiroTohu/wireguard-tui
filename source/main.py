@@ -1,16 +1,20 @@
-from textual.app import App, ComposeResult, Widget
+from textual.app import App, ComposeResult
 from textual.widgets import ListView, Label
+from textual.widget import Widget
 from textual.containers import Grid
 from textual.screen import ModalScreen
 
 from rich import box
 from rich.panel import Panel
 
+from wireguard_client import WireGuardClient
+
 
 class FocusPanel(Widget):
     def on_mount(self) -> None:
-        self.panel = Panel("Stuff", title="Tunnels", border_style="red",
-                           box=box.SQUARE)
+        clients = WireGuardClient.list()
+        self.panel = Panel(WireGuardClient.list(), title="Tunnels",
+                           border_style="red", box=box.SQUARE)
 
     def render(self) -> Panel:
         return self.panel
