@@ -19,19 +19,21 @@ class WireGuardClient():
     @classmethod
     def activate(cls, config: str) -> bool:
         """Activate a wireguard configuration"""
-        cls.send_message(f"up {config}")
+        return cls.send_message(f"up {config}")
 
     @classmethod
     def deactivate(cls, config: str) -> bool:
         """Deactivate a wireguard configuration"""
-        cls.send_message(f"down {config}")
+        return cls.send_message(f"down {config}")
 
     @classmethod
     def send_message(cls, message: str) -> str:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
             s.connect(cls.SOCKET_PATH)
             s.sendall(message.encode())
-            return True
+            data = s.recv(1024).decode()
+            print(data)
+            return data
 
 
 if __name__ == "__main__":
