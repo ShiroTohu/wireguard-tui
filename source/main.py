@@ -7,13 +7,10 @@ from textual.screen import ModalScreen
 from rich import box
 from rich.panel import Panel
 
-from wireguard_client import WireGuardClient
-
 
 class FocusPanel(Widget):
     def on_mount(self) -> None:
-        clients = WireGuardClient.list()
-        self.panel = Panel(WireGuardClient.list(), title="Tunnels",
+        self.panel = Panel("temp", title="Tunnels",
                            border_style="red", box=box.SQUARE)
 
     def render(self) -> Panel:
@@ -58,17 +55,16 @@ class WireGuardApp(App):
         ("shift+tab", "last_panel", "Last Panel")
     ]
 
+    CSS_PATH = "app.tcss"
+
     def compose(self) -> ComposeResult:
-        yield Grid(
-            TunnelsSelect(),
-            Logs(),
-            NetworkInformation(),
-            TunnelInformation(),
-        )
+        yield TunnelsSelect(id="tunnel_select")
+        yield NetworkInformation()
+        yield TunnelInformation()
+        yield Logs()
 
     def on_mount(self) -> None:
         self.title = "Wireguard TUI"
-        self.screen.styles.background = "transparent"
         self.focus_index = 0
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
