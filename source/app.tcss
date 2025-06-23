@@ -1,5 +1,4 @@
 Screen {
-    background: transparent;
     layout: grid;
     grid-size: 2;
     grid-columns: 3fr 5fr;
