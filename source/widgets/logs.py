@@ -1,11 +1,13 @@
-from textual.widgets import Widget
+from textual.widget import Widget
 from textual.reactive import reactive
 
 from rich.panel import Panel
-from rich.box import box
+from rich import box
 
 
 class Logs(Widget):
+    """Displays the logs for wireguard."""
+
     def on_mount(self) -> None:
         self.panel = Panel("Stuff", title="Logs", border_style="white",
                            box=box.SQUARE)

@@ -1,10 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.widgets import ListView, Label
-from textual.widget import Widget
-from textual.reactive import reactive
 from textual.screen import ModalScreen
 
-from rich import box
 from rich.panel import Panel
 
 from source.widgets import Logs
@@ -41,7 +38,7 @@ class WireGuardApp(App):
         ("q", "quit", "quit")
     ]
 
-    CSS_PATH = "app.tcss"
+    CSS_PATH = "source/app.tcss"
 
     def compose(self) -> ComposeResult:
         yield Logs()
