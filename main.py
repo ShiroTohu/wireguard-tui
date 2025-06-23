@@ -4,7 +4,7 @@ from textual.screen import ModalScreen
 
 from rich.panel import Panel
 
-from source.widgets import Logs
+from source.widgets import Logs, TunnelSelect
 
 """
 class FocusPanel(Widget):
@@ -41,7 +41,7 @@ class WireGuardApp(App):
     CSS_PATH = "source/app.tcss"
 
     def compose(self) -> ComposeResult:
-        yield Logs()
+        yield TunnelSelect()
 
     def on_mount(self) -> None:
         self.title = "Wireguard TUI"

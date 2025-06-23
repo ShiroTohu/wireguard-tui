@@ -15,12 +15,12 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
     os.chmod(SOCKET_PATH, 0o666)
     server.listen()
 
+    print("daemon is running")
+
     conn, _ = server.accept()
     with conn:
         while True:
             data = conn.recv(1024).decode().strip()
-            if not data:
-                break
 
             if data.startswith("up "):
                 profile = data.split()[1]
