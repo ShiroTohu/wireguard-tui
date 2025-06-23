@@ -24,6 +24,10 @@ class WireGuardClient():
         return cls.send_message("list")
 
     @classmethod
+    def watch(cls, config: str) -> bool:
+        return cls.send_message(f"watch {config}")
+
+    @classmethod
     def send_message(cls, message: str) -> str:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
             s.connect(cls.SOCKET_PATH)
