@@ -15,7 +15,7 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
     os.chmod(SOCKET_PATH, 0o666)
     server.listen()
 
-    print("daemon is running")
+    print("daemon is running...")
 
     conn, _ = server.accept()
     with conn:
@@ -23,18 +23,22 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
             data = conn.recv(1024).decode().strip()
 
             if data.startswith("up "):
+                print("down")
                 profile = data.split()[1]
                 command = subprocess.run(["wg-quick", "up", profile])
                 conn.sendall(bytes(command.returncode))
             elif data.startswith("down "):
+                print("down")
                 profile = data.split()[1]
                 subprocess.run(["wg-quick", "down", profile])
                 conn.sendall(bytes(command.returncode))
             elif data == "list":
+                print("list")
                 configs = subprocess.run(["ls", "/etc/wireguard/"],
                                          capture_output=True, text=True)
                 conn.sendall(configs.stdout.encode())
             elif data.startswith("watch"):
+                print("watch")
                 profile = data.split()[1]
                 info = subprocess.run(["watch", "wg", "show", profile],
                                       capture_output=True, text=True)

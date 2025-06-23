@@ -1,3 +1,4 @@
+from textual.widgets import RichLog
 from textual.widget import Widget
 from textual.reactive import reactive
 from textual.events import Key
@@ -25,7 +26,11 @@ class TunnelSelect(Widget):
                      expand=True)
 
     def get_tunnels(self) -> list:
-        return ["tunnel 1", "tunnel 2", "tunnel 3", "tunnel 4", "tunnel 5"]
+        try:
+            tunnels = WireGuardClient.list()
+            return tunnels.split("\n")[::-1]
+        except (Exception):
+            return ["tunnel 1", "tunnel 2", "tunnel 3", "tunnel 4", "tunnel 5"]
 
     def move_up(self) -> None:
         if (self.select_index > 0):
