@@ -46,6 +46,6 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
                 elif data.startswith("watch"):
                     print("watch")
                     profile = data.split()[1]
-                    info = subprocess.run(["watch", "wg", "show", profile],
+                    info = subprocess.run(["wg", "show", profile],
                                           capture_output=True, text=True)
                     conn.sendall(info.stdout.encode())

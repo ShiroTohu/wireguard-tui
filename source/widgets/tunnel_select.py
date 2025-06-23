@@ -1,7 +1,4 @@
-from textual.widgets import RichLog
 from textual.widget import Widget
-from textual.reactive import reactive
-from textual.events import Key
 
 from rich.panel import Panel
 from rich.text import Text
@@ -10,7 +7,6 @@ from rich import box
 from source.wireguard_client import WireGuardClient
 
 
-# TODO: Fix code lmaooo
 class TunnelSelect(Widget):
     """Displays tunnels that can be selected"""
 
