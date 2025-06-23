@@ -1,0 +1,6 @@
+__title__ = "wireguard_tui"
+__version__ = "0.1.0"
+__summary__ = "A TUI WireGuard manager using Textual and Rich"
+__author__ = "Shirotohu"
+__license__ = "GPLv3"
+__url__ = "https://github.com/ShiroTohu/wireguard-tui"
