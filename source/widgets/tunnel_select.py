@@ -28,7 +28,7 @@ class TunnelSelect(Widget):
     def get_tunnels(self) -> list:
         try:
             tunnels = WireGuardClient.list()
-            return tunnels.split("\n")[::-1]
+            return tunnels.split("\n")[:-1]
         except (Exception):
             return ["tunnel 1", "tunnel 2", "tunnel 3", "tunnel 4", "tunnel 5"]
 

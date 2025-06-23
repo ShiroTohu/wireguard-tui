@@ -17,29 +17,35 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
 
     print("daemon is running...")
 
-    conn, _ = server.accept()
-    with conn:
-        while True:
-            data = conn.recv(1024).decode().strip()
+    while True:
+        conn, _ = server.accept()
+        with conn:
+            print("client connected")
+            while True:
+                data = conn.recv(1024).decode().strip()
 
-            if data.startswith("up "):
-                print("down")
-                profile = data.split()[1]
-                command = subprocess.run(["wg-quick", "up", profile])
-                conn.sendall(bytes(command.returncode))
-            elif data.startswith("down "):
-                print("down")
-                profile = data.split()[1]
-                subprocess.run(["wg-quick", "down", profile])
-                conn.sendall(bytes(command.returncode))
-            elif data == "list":
-                print("list")
-                configs = subprocess.run(["ls", "/etc/wireguard/"],
-                                         capture_output=True, text=True)
-                conn.sendall(configs.stdout.encode())
-            elif data.startswith("watch"):
-                print("watch")
-                profile = data.split()[1]
-                info = subprocess.run(["watch", "wg", "show", profile],
-                                      capture_output=True, text=True)
-                conn.sendall(info.stdout.encode())
+                if not data:
+                    print("Client disconnected")
+                    break
+
+                if data.startswith("up "):
+                    print("down")
+                    profile = data.split()[1]
+                    command = subprocess.run(["wg-quick", "up", profile])
+                    conn.sendall(bytes(command.returncode))
+                elif data.startswith("down "):
+                    print("down")
+                    profile = data.split()[1]
+                    subprocess.run(["wg-quick", "down", profile])
+                    conn.sendall(bytes(command.returncode))
+                elif data == "list":
+                    print("list")
+                    configs = subprocess.run(["ls", "/etc/wireguard/"],
+                                             capture_output=True, text=True)
+                    conn.sendall(configs.stdout.encode())
+                elif data.startswith("watch"):
+                    print("watch")
+                    profile = data.split()[1]
+                    info = subprocess.run(["watch", "wg", "show", profile],
+                                          capture_output=True, text=True)
+                    conn.sendall(info.stdout.encode())
