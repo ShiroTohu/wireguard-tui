@@ -1,5 +1,6 @@
 from textual.widget import Widget
 from textual.reactive import reactive
+from textual.events import Key
 
 from rich.panel import Panel
 from rich.text import Text
@@ -8,6 +9,7 @@ from rich import box
 from source.wireguard_client import WireGuardClient
 
 
+# TODO: Fix code lmaooo
 class TunnelSelect(Widget):
     """Displays tunnels that can be selected"""
 
@@ -16,18 +18,24 @@ class TunnelSelect(Widget):
         self.tunnels = self.get_tunnels()
         self.select_index = 0
 
-    def on_mount(self) -> None:
-        self.panel = Panel(self.__convert_list_to_text(self.tunnels),
-                           title="Tunnel Select",
-                           border_style="red", box=box.SQUARE,
-                           expand=True)
-        self.has_focus = reactive(False)
-
     def render(self) -> None:
-        return self.panel
+        return Panel(self.__convert_list_to_text(self.tunnels),
+                     title="Tunnel Select",
+                     border_style="red", box=box.SQUARE,
+                     expand=True)
 
     def get_tunnels(self) -> list:
         return ["tunnel 1", "tunnel 2", "tunnel 3", "tunnel 4", "tunnel 5"]
+
+    def move_up(self) -> None:
+        if (self.select_index > 0):
+            self.select_index -= 1
+            self.refresh()
+
+    def move_down(self) -> None:
+        if (self.select_index < len(self.tunnels) - 1):
+            self.select_index += 1
+            self.refresh()
 
     def __convert_list_to_text(self, tunnels: list) -> Text:
         text = Text()

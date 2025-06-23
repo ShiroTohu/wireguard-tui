@@ -1,6 +1,7 @@
 from textual.app import App, ComposeResult
-from textual.widgets import ListView, Label
+from textual.widgets import ListView, Label, RichLog
 from textual.screen import ModalScreen
+from textual import events
 
 from rich.panel import Panel
 
@@ -42,10 +43,22 @@ class WireGuardApp(App):
 
     def compose(self) -> ComposeResult:
         yield TunnelSelect()
+        yield RichLog()
 
     def on_mount(self) -> None:
         self.title = "Wireguard TUI"
         self.focus_index = 0
+
+    def on_key(self, event: events.Key) -> None:
+        self.query_one(RichLog).write(event)
+
+    def key_j(self) -> None:
+        self.query_one(TunnelSelect).move_down()
+        self.query_one(RichLog).write("move_down")
+
+    def key_k(self) -> None:
+        self.query_one(TunnelSelect).move_up()
+        self.query_one(RichLog).write("move_up")
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         selected = event.item.query_one(Label).text
