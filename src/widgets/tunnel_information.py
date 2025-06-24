@@ -3,7 +3,7 @@ from textual.widget import Widget
 from rich.panel import Panel
 from rich import box
 
-from source.wireguard_client import WireGuardClient
+from src.wireguard_client import WireGuardClient
 
 
 class TunnelInformation(Widget):

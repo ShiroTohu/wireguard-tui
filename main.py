@@ -5,7 +5,7 @@ from textual import events
 
 from rich.panel import Panel
 
-from source.widgets import TunnelSelect, TunnelInformation, Status
+from src.widgets import TunnelSelect, TunnelInformation, Status
 
 
 class ErrorModal(ModalScreen):
@@ -19,7 +19,7 @@ class WireGuardApp(App):
         ("space", "activate", "toggle tunnel")
     ]
 
-    CSS_PATH = "source/app.tcss"
+    CSS_PATH = "src/app.tcss"
 
     def compose(self) -> ComposeResult:
         yield TunnelSelect()
@@ -42,7 +42,6 @@ class WireGuardApp(App):
     def key_k(self) -> None:
         # self.query_one(RichLog).write("move_up")
         self.query_one(TunnelSelect).move_up()
-
 
 
 if __name__ == "__main__":
