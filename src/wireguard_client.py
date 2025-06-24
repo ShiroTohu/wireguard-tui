@@ -25,7 +25,10 @@ class WireGuardClient():
 
     @classmethod
     def show(cls, config: str) -> bool:
-        """shows the public key, listening port, endpoint and other relevant information."""
+        """
+        shows the public key, listening port, endpoint and other relevant
+        information.
+        """
         return cls.send_message(f"show {config}")
 
     @classmethod
