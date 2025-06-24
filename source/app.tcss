@@ -1,10 +1,10 @@
 Screen {
     background: black;
     layout: grid;
-    grid-size: 2;
+    grid-size: 2 2;
     grid-columns: 1fr 3fr;
 }
 
-#tunnel_select {
-    row-span: 3;
+TunnelSelect {
+    row-span: 2;
 }
