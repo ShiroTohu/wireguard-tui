@@ -43,8 +43,8 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
                     configs = subprocess.run(["ls", "/etc/wireguard/"],
                                              capture_output=True, text=True)
                     conn.sendall(configs.stdout.encode())
-                elif data.startswith("watch"):
-                    print("watch")
+                elif data.startswith("show"):
+                    print("show")
                     profile = data.split()[1]
                     info = subprocess.run(["wg", "show", profile],
                                           capture_output=True, text=True)
