@@ -24,8 +24,9 @@ class WireGuardClient():
         return cls.send_message("list")
 
     @classmethod
-    def watch(cls, config: str) -> bool:
-        return cls.send_message(f"watch {config}")
+    def show(cls, config: str) -> bool:
+        """shows the public key, listening port, endpoint and other relevant information."""
+        return cls.send_message(f"show {config}")
 
     @classmethod
     def send_message(cls, message: str) -> str:

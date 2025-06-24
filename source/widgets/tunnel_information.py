@@ -17,7 +17,7 @@ class TunnelInformation(Widget):
 
     def get_information(self) -> str:
         try:
-            information = WireGuardClient.watch("test")
+            information = WireGuardClient.show("jp-tyo-wg-002")
             return information
         except (Exception):
             return "Cannot find tunnel"
