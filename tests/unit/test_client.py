@@ -1,3 +1,5 @@
+import pytest
+
 class TestClient():
     def test_activate(self):
         assert True
