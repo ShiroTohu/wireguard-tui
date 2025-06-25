@@ -42,8 +42,3 @@ class WireGuardApp(App):
     def key_k(self) -> None:
         # self.query_one(RichLog).write("move_up")
         self.query_one(TunnelSelect).move_up()
-
-
-if __name__ == "__main__":
-    app = WireGuardApp()
-    app.run()
