@@ -5,7 +5,7 @@ from textual import events
 
 from rich.panel import Panel
 
-from src.widgets import TunnelSelect, TunnelInformation, Status
+from .widgets import TunnelSelect, TunnelInformation, Status
 
 
 class ErrorModal(ModalScreen):
@@ -19,7 +19,7 @@ class WireGuardApp(App):
         ("space", "activate", "toggle tunnel")
     ]
 
-    CSS_PATH = "src/app.tcss"
+    CSS_PATH = "./app.tcss"
 
     def compose(self) -> ComposeResult:
         yield TunnelSelect()

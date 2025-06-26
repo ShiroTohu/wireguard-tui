@@ -4,7 +4,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich import box
 
-from src.wireguard_client import WireGuardClient
+from ..wireguard_client import WireGuardClient
 
 
 class TunnelSelect(Widget):
