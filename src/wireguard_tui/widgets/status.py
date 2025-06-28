@@ -14,5 +14,6 @@ class Status(Widget):
         content = "Active: True\nLocal interface IP's: 10.6.8.9"
         return Panel(content,
                      title="Status",
-                     border_style="white", box=box.SQUARE,
+                     border_style=self.app.get_css_variables()["foreground"],
+                     box=box.SQUARE,
                      expand=True)

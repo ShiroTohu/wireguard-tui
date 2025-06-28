@@ -12,7 +12,8 @@ class TunnelInformation(Widget):
     def render(self) -> None:
         return Panel(self.get_information(),
                      title="Tunnel Information",
-                     border_style="white", box=box.SQUARE,
+                     border_style=self.app.get_css_variables()["foreground"],
+                     box=box.SQUARE,
                      expand=True)
 
     def get_information(self) -> str:

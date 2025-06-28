@@ -40,11 +40,12 @@ class TunnelSelect(Widget):
             self.refresh()
 
     def __convert_list_to_text(self, tunnels: list) -> Text:
+        styles = self.app.get_css_variables()
         text = Text()
         for i in range(len(self.tunnels)):
             temp = Text(self.tunnels[i] + "\n")
             if i == self.select_index:
-                temp.stylize("black on white")
+                temp.stylize(f"{styles['background']} on {styles['foreground']}")
             text += temp
 
         return text
