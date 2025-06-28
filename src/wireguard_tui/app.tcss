@@ -1,5 +1,5 @@
 Screen {
-    background: black;
+    background: $background;
     layout: grid;
     grid-size: 2 2;
     grid-columns: 1fr 3fr;

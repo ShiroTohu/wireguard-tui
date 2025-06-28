@@ -18,7 +18,8 @@ class TunnelSelect(Widget):
     def render(self) -> None:
         return Panel(self.__convert_list_to_text(self.tunnels),
                      title="Tunnel Select",
-                     border_style="red", box=box.SQUARE,
+                     border_style=self.app.get_css_variables()["primary"],
+                     box=box.SQUARE,
                      expand=True)
 
     def get_tunnels(self) -> list:
