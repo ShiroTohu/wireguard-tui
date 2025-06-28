@@ -7,27 +7,18 @@ from rich import box
 from ..wireguard_client import WireGuardClient
 
 
-class TunnelSelect(Widget):
-    """Displays tunnels that can be selected"""
-
-    def __init__(self):
+class SelectWidget(Widget):
+    def __init__(self, options: list) -> None:
         super().__init__()
-        self.tunnels = self.get_tunnels()
+        self.options = options
         self.select_index = 0
 
     def render(self) -> None:
-        return Panel(self.__convert_list_to_text(self.tunnels),
+        return Panel(self.__convert_list_to_text(self.options),
                      title="Tunnel Select",
                      border_style=self.app.get_css_variables()["primary"],
                      box=box.SQUARE,
                      expand=True)
-
-    def get_tunnels(self) -> list:
-        try:
-            tunnels = WireGuardClient.list()
-            return tunnels.split("\n")[:-1]
-        except (Exception):
-            return ["tunnel 1", "tunnel 2", "tunnel 3", "tunnel 4", "tunnel 5"]
 
     def move_up(self) -> None:
         if (self.select_index > 0):
@@ -35,17 +26,24 @@ class TunnelSelect(Widget):
             self.refresh()
 
     def move_down(self) -> None:
-        if (self.select_index < len(self.tunnels) - 1):
+        if (self.select_index < len(self.options) - 1):
             self.select_index += 1
             self.refresh()
 
-    def __convert_list_to_text(self, tunnels: list) -> Text:
+    def __convert_list_to_text(self, options: list) -> Text:
         styles = self.app.get_css_variables()
         text = Text()
-        for i in range(len(self.tunnels)):
-            temp = Text(self.tunnels[i] + "\n")
+        for i in range(len(self.options)):
+            temp = Text(self.options[i] + "\n")
             if i == self.select_index:
                 temp.stylize(f"{styles['background']} on {styles['foreground']}")
             text += temp
 
         return text
+
+
+class TunnelSelect(SelectWidget):
+    """Displays tunnels that can be selected"""
+
+    def __init__(self, options: list) -> None:
+        super().__init__(options)

@@ -22,7 +22,7 @@ class WireGuardApp(App):
     CSS_PATH = "./app.tcss"
 
     def compose(self) -> ComposeResult:
-        yield TunnelSelect()
+        yield TunnelSelect(["asd", "asdaa", "asdsdaasd"])
         yield Status()
         yield TunnelInformation()
         yield Footer()
