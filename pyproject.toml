@@ -30,3 +30,6 @@ Issues = "https://github.com/ShiroTohu/wireguard-tui/issues"
 addopts = [
     "--import-mode=importlib",
 ]
+
+[project.scripts]
+wireguard-tui = "wireguard_tui.app:run"
