@@ -1,4 +1,5 @@
 import subprocess
+import threading
 import socket
 import os
 
@@ -35,21 +36,20 @@ def handler(conn) -> None:
             conn.sendall(info.stdout.encode())
 
 
-def main():
+def run(socket_path: str):
     # Socket path for the AF_UINX address family
-    SOCKET_PATH = "/run/wg-manager.sock"
     MAXIMUM_CONNECTIONS = 1
 
     # Remove the socket path before socket bind
-    if os.path.exists(SOCKET_PATH):
-        os.remove(SOCKET_PATH)
+    if os.path.exists(socket_path):
+        os.remove(socket_path)
 
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
-        server.bind(SOCKET_PATH)
-        os.chmod(SOCKET_PATH, 0o666)
+        server.bind(socket_path)
+        os.chmod(socket_path, 0o666)
         server.listen(MAXIMUM_CONNECTIONS)
 
-        print("daemon is running...")
+        print(f"daemon running {os.getpid()}")
 
         while True:
             conn, _ = server.accept()
@@ -58,4 +58,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    SOCKET_PATH = "/run/wg-manager.sock"
+    run(SOCKET_PATH)
