@@ -21,7 +21,7 @@ class WireGuardClient():
     @classmethod
     def list(cls) -> bool:
         """List all available configs"""
-        return cls.send_message("list")
+        return cls.send_message("list").split("\n")
 
     @classmethod
     def show(cls, config: str) -> bool:

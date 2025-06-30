@@ -5,6 +5,7 @@ from textual import events
 
 from rich.panel import Panel
 
+from .wireguard_client import WireGuardClient
 from .widgets import TunnelSelect, TunnelInformation, Status
 
 
@@ -22,7 +23,7 @@ class WireGuardApp(App):
     CSS_PATH = "./app.tcss"
 
     def compose(self) -> ComposeResult:
-        yield TunnelSelect(["asd", "asdaa", "asdsdaasd"])
+        yield TunnelSelect(WireGuardClient.list())
         yield Status()
         yield TunnelInformation()
         yield Footer()
