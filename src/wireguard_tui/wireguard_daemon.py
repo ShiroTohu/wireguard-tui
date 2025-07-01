@@ -24,15 +24,16 @@ def handler(conn) -> None:
             subprocess.run(["wg-quick", "down", profile])
             conn.sendall(bytes(command.returncode))
         elif data == "list":
-            print("list")
             configs = subprocess.run(["ls", "/etc/wireguard/"],
                                      capture_output=True, text=True)
+            print("list: \n" + configs.stdout)
             conn.sendall(configs.stdout.encode())
         elif data.startswith("show"):
-            print("show")
             profile = data.split()[1]
+            print("profile: " + profile)
             info = subprocess.run(["wg", "show", profile],
                                   capture_output=True, text=True)
+            print("show: \n" + info.stdout)
             conn.sendall(info.stdout.encode())
 
 

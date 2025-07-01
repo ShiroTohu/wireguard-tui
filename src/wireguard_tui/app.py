@@ -6,7 +6,7 @@ from textual import events
 from rich.panel import Panel
 
 from .wireguard_client import WireGuardClient
-from .widgets import TunnelSelect, TunnelInformation, Status
+from .widgets import TunnelSelect, TunnelInformation, Status, NetworkInformation
 
 
 class ErrorModal(ModalScreen):
@@ -24,7 +24,7 @@ class WireGuardApp(App):
 
     def compose(self) -> ComposeResult:
         yield TunnelSelect(WireGuardClient.list())
-        yield Status()
+        yield NetworkInformation()
         yield TunnelInformation()
         yield Footer()
         yield ErrorModal()
