@@ -84,9 +84,9 @@ class WireGuardDaemon:
             while True:
                 conn, _ = server.accept()
                 with conn:
-                    handler(conn)
+                    cls.handler(conn)
 
 
 if __name__ == "__main__":
     SOCKET_PATH = "/run/wg-manager.sock"
-    run(SOCKET_PATH)
+    WireGuardDaemon.run(SOCKET_PATH)
