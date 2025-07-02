@@ -1,61 +1,78 @@
 import subprocess
-import threading
 import socket
 import os
+from typing import Type, Self
 
 
-def handler(conn) -> None:
-    print("client connected")
-    while True:
-        data = conn.recv(1024).decode().strip()
+class WireGuardDaemon:
+    @staticmethod
+    def up(interface: str) -> int:
+        command = subprocess.run(["wg-quick", "up", interface])
+        return command.returncode
 
-        if not data:
-            print("Client disconnected")
-            break
+    @staticmethod
+    def down(interface: str) -> int:
+        command = subprocess.run(["wg-quick", "down", interface])
+        return command.returncode
 
-        if data.startswith("up "):
-            print("down")
-            profile = data.split()[1]
-            command = subprocess.run(["wg-quick", "up", profile])
-            conn.sendall(bytes(command.returncode))
-        elif data.startswith("down "):
-            print("down")
-            profile = data.split()[1]
-            subprocess.run(["wg-quick", "down", profile])
-            conn.sendall(bytes(command.returncode))
-        elif data == "list":
-            configs = subprocess.run(["ls", "/etc/wireguard/"],
-                                     capture_output=True, text=True)
-            print("list: \n" + configs.stdout)
-            conn.sendall(configs.stdout.encode())
-        elif data.startswith("show"):
-            profile = data.split()[1]
-            print("profile: " + profile)
-            info = subprocess.run(["wg", "show", profile],
-                                  capture_output=True, text=True)
-            print("show: \n" + info.stdout)
-            conn.sendall(info.stdout.encode())
+    @staticmethod
+    def list() -> str:
+        configs = subprocess.run(["ls", "/etc/wireguard/"],
+                                 capture_output=True, text=True)
+        return configs.stdout
 
+    @staticmethod
+    def show(interface: str) -> str:
+        info = subprocess.run(["wg", "show", interface],
+                              capture_output=True, text=True)
+        return info.stdout
 
-def run(socket_path: str):
-    # Socket path for the AF_UINX address family
-    MAXIMUM_CONNECTIONS = 1
-
-    # Remove the socket path before socket bind
-    if os.path.exists(socket_path):
-        os.remove(socket_path)
-
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
-        server.bind(socket_path)
-        os.chmod(socket_path, 0o666)
-        server.listen(MAXIMUM_CONNECTIONS)
-
-        print(f"daemon running {os.getpid()}")
-
+    @classmethod
+    def handler(cls: Type[Self], conn: socket.socket) -> None:
+        print("client connected")
         while True:
-            conn, _ = server.accept()
-            with conn:
-                handler(conn)
+            data = conn.recv(1024).decode().strip()
+
+            if not data:
+                print("Client disconnected")
+                break
+
+            if data.startswith("up "):
+                interface = data.split()[1]
+                command = cls.up(interface)
+                conn.sendall(bytes(command))
+            elif data.startswith("down "):
+                interface = data.split()[1]
+                cls.down(interface)
+                conn.sendall(bytes(command))
+            elif data == "list":
+                interfaces = cls.list()
+                conn.sendall(interfaces.encode())
+            elif data.startswith("show"):
+                interface = data.split()[1]
+                cls.show(interface)
+                conn.sendall(interface.encode())
+
+    @classmethod
+    def run(cls: Type[Self], socket_path: str):
+        # Socket path for the AF_UINX address family
+        MAXIMUM_CONNECTIONS = 1
+
+        # Remove the socket path before socket bind
+        if os.path.exists(socket_path):
+            os.remove(socket_path)
+
+        with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
+            server.bind(socket_path)
+            os.chmod(socket_path, 0o666)
+            server.listen(MAXIMUM_CONNECTIONS)
+
+            print(f"daemon running {os.getpid()}")
+
+            while True:
+                conn, _ = server.accept()
+                with conn:
+                    handler(conn)
 
 
 if __name__ == "__main__":
