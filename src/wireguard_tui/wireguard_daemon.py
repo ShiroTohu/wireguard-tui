@@ -7,22 +7,34 @@ from typing import Type, Self
 class WireGuardDaemon:
     @staticmethod
     def up(interface: str) -> int:
+        """enable a wireguard interface"""
         command = subprocess.run(["wg-quick", "up", interface])
         return command.returncode
 
     @staticmethod
     def down(interface: str) -> int:
+        """disable a wireguard interface"""
         command = subprocess.run(["wg-quick", "down", interface])
         return command.returncode
 
     @staticmethod
     def list() -> str:
+        """
+        return a list of available interfaces this includes
+        .conf at the end since it's just listing the /etc/wireguard/
+        directory
+        """
         configs = subprocess.run(["ls", "/etc/wireguard/"],
                                  capture_output=True, text=True)
         return configs.stdout
 
     @staticmethod
     def show(interface: str) -> str:
+        """
+        return a string that shows information about the interface such as
+        listening port, endpoint, allowed ips latest handshake and other
+        things.
+        """
         info = subprocess.run(["wg", "show", interface],
                               capture_output=True, text=True)
         return info.stdout
