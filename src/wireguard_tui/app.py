@@ -4,9 +4,12 @@ from textual.screen import ModalScreen
 from textual import events
 
 from rich.panel import Panel
+from rich import print
 
 from .wireguard_client import WireGuardClient
-from .widgets import TunnelSelect, TunnelInformation, Status, NetworkInformation
+from .wireguard_daemon import WireGuardDaemon
+from .widgets import TunnelSelect, TunnelInformation, \
+    NetworkInformation
 
 
 class ErrorModal(ModalScreen):
@@ -45,6 +48,9 @@ class WireGuardApp(App):
         self.query_one(TunnelSelect).move_up()
 
 
-def run():
-    app = WireGuardApp()
-    app.run()
+def main():
+    if (WireGuardDaemon.is_running()):
+        app = WireGuardApp()
+        app.run()
+    else:
+        print("[bold red]Cannot connect to WireGuardDaemon")

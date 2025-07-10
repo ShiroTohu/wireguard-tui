@@ -5,6 +5,8 @@ from typing import Type, Self
 
 
 class WireGuardDaemon:
+    SOCKET_PATH = "/run/wg-manager.sock"
+
     @staticmethod
     def up(interface: str) -> int:
         """enable a wireguard interface"""
@@ -66,17 +68,17 @@ class WireGuardDaemon:
                 conn.sendall(interface.encode())
 
     @classmethod
-    def run(cls: Type[Self], socket_path: str):
+    def run(cls: Type[Self]) -> None:
         # Socket path for the AF_UINX address family
         MAXIMUM_CONNECTIONS = 1
 
         # Remove the socket path before socket bind
-        if os.path.exists(socket_path):
-            os.remove(socket_path)
+        if os.path.exists(cls.SOCKET_PATH):
+            os.remove(cls.SOCKET_PATH)
 
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
-            server.bind(socket_path)
-            os.chmod(socket_path, 0o666)
+            server.bind(cls.SOCKET_PATH)
+            os.chmod(cls.SOCKET_PATH, 0o666)
             server.listen(MAXIMUM_CONNECTIONS)
 
             print(f"daemon running {os.getpid()}")
@@ -86,7 +88,21 @@ class WireGuardDaemon:
                 with conn:
                     cls.handler(conn)
 
+    @classmethod
+    def is_running(cls: Type[Self]) -> bool:
+        """
+        Checks whether the daemon can be opened. Will return False
+        if the socket is not running and True if the daemon is running.
+        """
+        if os.path.exists(cls.SOCKET_PATH):
+            return False
+        try:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+                s.connect(cls.SOCKET_PATH)
+                return True
+        except socket.error:
+            return False
 
-if __name__ == "__main__":
-    SOCKET_PATH = "/run/wg-manager.sock"
-    WireGuardDaemon.run(SOCKET_PATH)
+
+def main():
+    WireGuardDaemon.run()
