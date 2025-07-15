@@ -18,6 +18,7 @@ class ErrorModal(ModalScreen):
 
 
 class WireGuardApp(App):
+    # Available bindings
     BINDINGS = [
         ("q", "quit", "quit"),
         ("space", "activate", "toggle tunnel")
@@ -34,10 +35,6 @@ class WireGuardApp(App):
 
     def on_mount(self) -> None:
         self.title = "Wireguard TUI"
-
-    def on_key(self, event: events.Key) -> None:
-        # self.query_one(RichLog).write(event)
-        pass
 
     def key_j(self) -> None:
         # self.query_one(RichLog).write("move_down")

@@ -5,6 +5,15 @@ from typing import Type, Self
 
 
 class WireGuardDaemon:
+    """
+    The WireGuardDaemon is a service is ran in the background that allows the
+    TUI to necessary elevated commands in order to run. These commands include:
+
+    - Listing available configurations
+    - Returning information about the activate connection
+    - Starting and stopping connections
+    - Return status of Daemon (whether it is running or not)
+    """
     SOCKET_PATH = "/run/wg-manager.sock"
 
     @staticmethod
@@ -34,7 +43,7 @@ class WireGuardDaemon:
     def show(interface: str) -> str:
         """
         return a string that shows information about the interface such as
-        listening port, endpoint, allowed ips latest handshake and other
+        listening port, endpoint, allowed ips, latest handshake and other
         things.
         """
         info = subprocess.run(["wg", "show", interface],
@@ -51,6 +60,7 @@ class WireGuardDaemon:
                 print("Client disconnected")
                 break
 
+            # TODO: Surely there is a more pragmatic apprach than this.
             if data.startswith("up "):
                 interface = data.split()[1]
                 command = cls.up(interface)

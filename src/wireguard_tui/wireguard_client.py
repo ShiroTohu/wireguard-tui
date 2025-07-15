@@ -1,5 +1,4 @@
 import socket
-import os
 from typing import Type, Self
 
 
@@ -44,7 +43,3 @@ class WireGuardClient():
             s.sendall(message.encode())
             data = s.recv(1024).decode()
             return data
-
-
-if __name__ == "__main__":
-    WireGuardClient.list()

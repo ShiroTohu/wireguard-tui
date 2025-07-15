@@ -17,6 +17,7 @@ class TunnelInformation(Widget):
                      expand=True)
 
     def get_information(self) -> str:
+        """Sends a request to the socket to return tunnel information"""
         try:
             information = WireGuardClient.show("jp-tyo-wg-002")  # test configuration
             return information
