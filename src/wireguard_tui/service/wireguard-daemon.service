@@ -1,0 +1,11 @@
+[Unit]
+Description=Wireguard Daemon
+
+[Service]
+ExecStart=wireguard-daemon 
+Restart=on-failure
+Environment=PYTHONUNBUFFERED=1
+User=wireguard-daemon
+
+[Install]
+WantedBy=multi-user.target
