@@ -1,7 +1,6 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Footer
 from textual.screen import ModalScreen
-from textual import events
 
 from rich.panel import Panel
 from rich import print
