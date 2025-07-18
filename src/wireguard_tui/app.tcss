@@ -1,10 +1,14 @@
 Screen {
     background: $background;
     layout: grid;
-    grid-size: 2 2;
-    grid-columns: 1fr 3fr;
+    align: center middle;
+    hatch: right $foreground 3%;
 }
 
 TunnelSelect {
     row-span: 2;
+}
+
+#main {
+    width: 50%
 }

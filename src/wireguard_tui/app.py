@@ -1,14 +1,14 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Footer
 from textual.screen import ModalScreen
+from textual.containers import VerticalGroup
 
 from rich.panel import Panel
 from rich import print
 
 from .wireguard_client import WireGuardClient
 from .wireguard_daemon import WireGuardDaemon
-from .widgets import TunnelSelect, TunnelInformation, \
-    NetworkInformation
+from .widgets import TunnelSelect, TunnelInformation
 
 
 class ErrorModal(ModalScreen):
@@ -26,11 +26,11 @@ class WireGuardApp(App):
     CSS_PATH = "./app.tcss"
 
     def compose(self) -> ComposeResult:
-        yield TunnelSelect(WireGuardClient.list())
-        yield NetworkInformation()
-        yield TunnelInformation()
-        yield Footer()
-        yield ErrorModal()
+        with VerticalGroup(classes="with-border"):
+            yield TunnelSelect(WireGuardClient.list())
+            yield TunnelInformation()
+            yield ErrorModal()
+            yield Footer()
 
     def on_mount(self) -> None:
         self.title = "Wireguard TUI"

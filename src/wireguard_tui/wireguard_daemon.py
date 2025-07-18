@@ -104,15 +104,24 @@ class WireGuardDaemon:
         Checks whether the daemon can be opened. Will return False
         if the socket is not running and True if the daemon is running.
         """
-        if os.path.exists(cls.SOCKET_PATH):
-            return False
+
+        # Not enough permissions to run this
+        # if os.path.exists(cls.SOCKET_PATH):
+        #    print("socket path does not exist")
+        #    return False
+        
         try:
             with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
                 s.connect(cls.SOCKET_PATH)
                 return True
         except socket.error:
+            print("cannot connect to socket")
             return False
 
 
 def main():
     WireGuardDaemon.run()
+
+
+if __name__ == "__main__":
+    main()
