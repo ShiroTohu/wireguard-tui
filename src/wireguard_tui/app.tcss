@@ -1,13 +1,13 @@
 Screen {
     align: center middle;
-    hatch: right $foreground 3%;
+    hatch: right $foreground 10%;
 }
 
 #content {
-    height: auto;
     width: 85;
     height: 20;
 
+    padding: 1 2;
     layout: grid;
     grid-size: 2 1;
     grid-columns: 1fr 2fr;

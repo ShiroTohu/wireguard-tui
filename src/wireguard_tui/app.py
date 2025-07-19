@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header
+from textual.widgets import Footer, Header, Label
 from textual.screen import ModalScreen
-from textual.containers import Vertical, Horizontal
+from textual.containers import Container
 
 from rich.panel import Panel
 from rich import print
@@ -27,10 +27,9 @@ class WireGuardApp(App):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with Horizontal(id="content"):
+        with Container(id="content"):
             yield TunnelSelect(WireGuardClient.list())
             yield TunnelInformation()
-        yield ErrorModal()
         yield Footer()
 
     def on_mount(self) -> None:
