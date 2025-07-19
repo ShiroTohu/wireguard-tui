@@ -1,14 +1,14 @@
 Screen {
-    background: $background;
-    layout: grid;
     align: center middle;
     hatch: right $foreground 3%;
 }
 
-TunnelSelect {
-    row-span: 2;
-}
+#content {
+    height: auto;
+    width: 85;
+    height: 20;
 
-#main {
-    width: 50%
+    layout: grid;
+    grid-size: 2 1;
+    grid-columns: 1fr 2fr;
 }

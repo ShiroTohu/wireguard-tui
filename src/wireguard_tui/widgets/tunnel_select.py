@@ -11,8 +11,8 @@ class SelectWidget(Widget):
     that the user can select the options specified in the options provided
     """
 
-    def __init__(self, options: list) -> None:
-        super().__init__()
+    def __init__(self, options: list, **kwargs) -> None:
+        super().__init__(**kwargs)
         self.options = options
         self.select_index = 0
 
