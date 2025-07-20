@@ -1,5 +1,5 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, Label
+from textual.widgets import Footer, Header
 from textual.screen import ModalScreen
 from textual.containers import Container
 
@@ -20,7 +20,7 @@ class WireGuardApp(App):
     # Available bindings
     BINDINGS = [
         ("q", "quit", "quit"),
-        ("space", "activate", "toggle tunnel")
+        ("space", "toggle_tunnel", "toggle tunnel")
     ]
 
     CSS_PATH = "./app.tcss"
@@ -42,6 +42,9 @@ class WireGuardApp(App):
     def key_k(self) -> None:
         # self.query_one(RichLog).write("move_up")
         self.query_one(TunnelSelect).move_up()
+
+    def action_toggle_tunnel(self) -> None:
+        self.query_one(TunnelSelect).toggle_tunnel()
 
 
 def main():

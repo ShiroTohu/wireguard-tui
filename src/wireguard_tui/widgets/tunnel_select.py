@@ -4,6 +4,8 @@ from rich.panel import Panel
 from rich.text import Text
 from rich import box
 
+from ..wireguard_client import WireGuardClient
+
 
 class SelectWidget(Widget):
     """
@@ -57,3 +59,6 @@ class TunnelSelect(SelectWidget):
 
     def __init__(self, options: list) -> None:
         super().__init__(options)
+
+    def toggle_tunnel(self) -> None:
+        WireGuardClient.activate()

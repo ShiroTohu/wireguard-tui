@@ -1,6 +1,7 @@
 import subprocess
 import socket
 import os
+
 from typing import Type, Self
 
 
@@ -15,6 +16,13 @@ class WireGuardDaemon:
     - Return status of Daemon (whether it is running or not)
     """
     SOCKET_PATH = "/run/wg-manager.sock"
+
+    commands = {
+        "up": lambda args: WireGuardDaemon.up(args[0]),
+        "down": lambda args: WireGuardDaemon.down(args[0]),
+        "list": lambda args: WireGuardDaemon.list(),
+        "show": lambda args: WireGuardDaemon.show(args[0])
+    }
 
     @staticmethod
     def up(interface: str) -> int:
@@ -42,9 +50,12 @@ class WireGuardDaemon:
     @staticmethod
     def show(interface: str) -> str:
         """
-        return a string that shows information about the interface such as
+        Returns a string that shows information about the interface such as
         listening port, endpoint, allowed ips, latest handshake and other
         things.
+
+        The show command can also list all interfaces that are up if given
+        "interfaces" as a interface.
         """
         info = subprocess.run(["wg", "show", interface],
                               capture_output=True, text=True)
@@ -60,22 +71,19 @@ class WireGuardDaemon:
                 print("Client disconnected")
                 break
 
-            # TODO: Surely there is a more pragmatic apprach than this.
-            if data.startswith("up "):
-                interface = data.split()[1]
-                command = cls.up(interface)
-                conn.sendall(bytes(command))
-            elif data.startswith("down "):
-                interface = data.split()[1]
-                cls.down(interface)
-                conn.sendall(bytes(command))
-            elif data == "list":
-                interfaces = cls.list()
-                conn.sendall(interfaces.encode())
-            elif data.startswith("show"):
-                interface = data.split()[1]
-                cls.show(interface)
-                conn.sendall(interface.encode())
+            parts = data.strip().split()
+
+            if not parts:
+                return
+
+            cmd, args = parts[0], parts[1:]
+
+            if cmd in cls.commands:
+                result = cls.commands[cmd](args)
+                if result is not None:
+                    conn.sendall(str(result).encode())
+            else:
+                conn.sendall(b"Unknown command")
 
     @classmethod
     def run(cls: Type[Self]) -> None:
@@ -109,7 +117,7 @@ class WireGuardDaemon:
         # if os.path.exists(cls.SOCKET_PATH):
         #    print("socket path does not exist")
         #    return False
-        
+
         try:
             with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
                 s.connect(cls.SOCKET_PATH)
