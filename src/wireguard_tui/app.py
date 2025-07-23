@@ -1,3 +1,5 @@
+import argparse
+
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header
 from textual.screen import ModalScreen
@@ -48,6 +50,17 @@ class WireGuardApp(App):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+                    prog='WireGuard TUI',
+                    description='Provides a TUI interface to enable and disable wireguard interfaces'
+                    )
+
+    parser.add_argument('--install-systemd',
+                        help="creates the systemd file for you.",
+                        action='store_true')
+
+    parser.parse_args()
+
     if (WireGuardDaemon.is_running()):
         app = WireGuardApp()
         app.run()
